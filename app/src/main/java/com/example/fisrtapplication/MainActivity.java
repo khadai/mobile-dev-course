@@ -29,18 +29,14 @@ public class MainActivity extends AppCompatActivity {
         signOut = findViewById(R.id.sign_out_button);
         welcomeText = findViewById(R.id.welcome_text);
 
-
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
 
-//        assert mUser != null;
         welcomeText.setText("Welcome, " + mUser.getDisplayName() + "!");
 
         signOut.setOnClickListener(v -> {
             mAuth.signOut();
             Intent intent = new Intent(this, SignInActivity.class);
-//            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
         });
 
