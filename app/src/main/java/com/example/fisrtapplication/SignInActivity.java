@@ -15,12 +15,12 @@ import com.google.firebase.auth.FirebaseAuth;
 import java.util.Objects;
 
 public class SignInActivity extends AppCompatActivity {
+    private EditText email;
+    private EditText password;
 
-    EditText email;
-    EditText password;
-    Button userSignIn;
-
-    FirebaseAuth mAuth;
+    private Button userSignIn;
+    private Button linkSignUp;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +30,7 @@ public class SignInActivity extends AppCompatActivity {
         email = findViewById(R.id.email_sign_in);
         password = findViewById(R.id.password_sign_in);
         userSignIn = findViewById(R.id.sign_in_button);
+        linkSignUp = findViewById(R.id.sign_up_link);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -40,7 +41,7 @@ public class SignInActivity extends AppCompatActivity {
             signIn(emailString, passwordString);
         });
 
-        findViewById(R.id.sign_up_button).setOnClickListener(v -> {
+        linkSignUp.setOnClickListener(v -> {
             startActivity(new Intent(this, SignUpActivity.class));
         });
     }
@@ -71,7 +72,8 @@ public class SignInActivity extends AppCompatActivity {
 
     private boolean validateEmail(final String mEmail) {
         if (mEmail.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(mEmail).matches()) {
-            email.setError("Enter a valid email");
+            String emailError = getString(R.string.email_error);
+            email.setError(emailError);
             return false;
         } else {
             email.setError(null);
@@ -81,7 +83,8 @@ public class SignInActivity extends AppCompatActivity {
 
     private boolean validatePassword(final String mPassword) {
         if (mPassword.isEmpty() || mPassword.length() < 8) {
-            password.setError("At least 8 characters");
+            String passwordError = getString(R.string.password_error);
+            password.setError(passwordError);
             return false;
         } else {
             password.setError(null);

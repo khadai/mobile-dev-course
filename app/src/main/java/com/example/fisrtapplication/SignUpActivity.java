@@ -18,11 +18,10 @@ import java.util.Objects;
 
 public class SignUpActivity extends AppCompatActivity {
 
-    EditText email;
-    EditText password;
-    EditText phone;
-    EditText name;
-    Button signUp;
+    private EditText email;
+    private EditText password;
+    private EditText phone;
+    private EditText name;
 
     private FirebaseAuth mAuth;
 
@@ -33,12 +32,12 @@ public class SignUpActivity extends AppCompatActivity {
 
         email = findViewById(R.id.email_sign_up);
         password = findViewById(R.id.password_sign_up);
-        signUp = findViewById(R.id.sign_up_button);
         phone = findViewById(R.id.phone_sign_up);
         name = findViewById(R.id.name_sign_up);
+        Button signUp = findViewById(R.id.sign_up_button);
+        Button linkSignIn = findViewById(R.id.sign_in_link);
 
         mAuth = FirebaseAuth.getInstance();
-
 
         signUp.setOnClickListener(v -> {
                     String emailString = email.getText().toString();
@@ -50,8 +49,7 @@ public class SignUpActivity extends AppCompatActivity {
                 }
         );
 
-
-        findViewById(R.id.sign_in_link).setOnClickListener(v -> {
+        linkSignIn.setOnClickListener(v -> {
             startActivity(new Intent(this, SignInActivity.class));
         });
 
@@ -85,12 +83,13 @@ public class SignUpActivity extends AppCompatActivity {
                         }
                     });
         }
-        Toast.makeText(SignUpActivity.this, "Reg success",
+        String regSuccess = getString(R.string.reg_success);
+        Toast.makeText(SignUpActivity.this, regSuccess,
                 Toast.LENGTH_LONG).show();
-        email.setText("");
-        password.setText("");
-        phone.setText("");
-        name.setText("");
+        email.getText().clear();
+        password.getText().clear();
+        phone.getText().clear();
+        name.getText().clear();
     }
 
     private void onSignUpFailed(Task<AuthResult> task) {
@@ -101,7 +100,8 @@ public class SignUpActivity extends AppCompatActivity {
 
     private boolean validateEmail(final String mEmail) {
         if (mEmail.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(mEmail).matches()) {
-            email.setError("Enter a valid email");
+            String emailError = getString(R.string.email_error);
+            email.setError(emailError);
             return false;
         } else {
             email.setError(null);
@@ -110,8 +110,10 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private boolean validateName(final String mName) {
-        if (!mName.matches("^[A-Za-z]+$")) {
-            name.setError("Enter a valid name");
+        String nameRegex = getString(R.string.name_regex);
+        if (!mName.matches(nameRegex)) {
+            String nameError = getString(R.string.name_error);
+            name.setError(nameError);
             return false;
         } else {
             name.setError(null);
@@ -121,7 +123,8 @@ public class SignUpActivity extends AppCompatActivity {
 
     private boolean validatePhone(final String mPhone) {
         if (mPhone.isEmpty() || !android.util.Patterns.PHONE.matcher(mPhone).matches()) {
-            phone.setError("Enter a valid phone");
+            String phoneError = getString(R.string.phone_error);
+            phone.setError(phoneError);
             return false;
         } else {
             phone.setError(null);
@@ -131,7 +134,8 @@ public class SignUpActivity extends AppCompatActivity {
 
     private boolean validatePassword(final String mPassword) {
         if (mPassword.isEmpty() || mPassword.length() < 8) {
-            password.setError("Enter password larger than 8 characters");
+            String passwordError = getString(R.string.password_error);
+            password.setError(passwordError);
             return false;
         } else {
             password.setError(null);
