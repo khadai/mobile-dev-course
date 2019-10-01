@@ -12,7 +12,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Objects;
 
@@ -24,6 +24,7 @@ public class SignUpActivity extends AppCompatActivity {
     private EditText name;
 
     private FirebaseAuth mAuth;
+    private FirebaseDatabase mBase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +39,8 @@ public class SignUpActivity extends AppCompatActivity {
         Button linkSignIn = findViewById(R.id.sign_in_link);
 
         mAuth = FirebaseAuth.getInstance();
+        mBase = FirebaseDatabase.getInstance();
+
 
         signUp.setOnClickListener(v -> {
                     String emailString = email.getText().toString();
@@ -69,23 +72,24 @@ public class SignUpActivity extends AppCompatActivity {
                 onSignUpFailed(task);
             }
         });
+
+
     }
 
     private void onSignUpSuccess() {
         FirebaseUser user = mAuth.getCurrentUser();
-        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                .setDisplayName(name.getText().toString()).build();
-        if (user != null) {
-            user.updateProfile(profileUpdates)
-                    .addOnCompleteListener(t -> {
-                        if (t.isSuccessful()) {
-                            startActivity(new Intent(this, MainActivity.class));
-                        }
-                    });
-        }
+
+        assert user != null;
+        mBase.getReference("users").child(user.getUid()).child("phone").setValue(phone.getText().toString());
+        mBase.getReference("users").child(user.getUid()).child("name").setValue(name.getText().toString());
+        mBase.getReference("users").child(user.getUid()).child("email").setValue(email.getText().toString());
+
         String regSuccess = getString(R.string.reg_success);
         Toast.makeText(SignUpActivity.this, regSuccess,
                 Toast.LENGTH_LONG).show();
+
+        startActivity(new Intent(this, MainActivity.class));
+
         email.getText().clear();
         password.getText().clear();
         phone.getText().clear();
