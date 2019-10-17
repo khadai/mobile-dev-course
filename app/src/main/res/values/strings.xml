@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">Fisrt Application</string>
+    <string name="welcome_username">Welcome, USERNAME!</string>
+    <string name="welcome_name">Welcome, %s!</string>
+    <string name="sign_out">Sign Out</string>
+    <string name="sign_in">Sign in</string>
+    <string name="email">Email</string>
+    <string name="name">Name</string>
+    <string name="phone">Phone</string>
+    <string name="password">Password</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="email_error">Enter a valid email</string>
+    <string name="password_error">Enter password longer than 8 characters</string>
+    <string name="phone_error">Enter a valid phone</string>
+    <string name="name_error">Enter a valid name</string>
+    <string name="reg_success">Registered successfully!</string>
+    <string name="name_regex">^[A-Za-z]+$</string>
+    <string name="name_path" >users/%s/name"</string>
+</resources>
