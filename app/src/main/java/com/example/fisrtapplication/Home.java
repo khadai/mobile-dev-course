@@ -3,6 +3,7 @@ package com.example.fisrtapplication;
 import android.app.Application;
 import android.content.Intent;
 
+import com.example.fisrtapplication.activities.MainActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 

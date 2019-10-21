@@ -1,4 +1,4 @@
-package com.example.fisrtapplication;
+package com.example.fisrtapplication.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.fisrtapplication.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -25,8 +26,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button signOut = findViewById(R.id.sign_out_button);
-        TextView welcomeText = findViewById(R.id.welcome_text);
+//        Button signOut = findViewById(R.id.sign_out_button);
+//        TextView welcomeText = findViewById(R.id.welcome_text);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -46,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
 
                 String welcomeTextFormat = getString(R.string.welcome_name);
 
-                welcomeText.setText(String.format(welcomeTextFormat, userName));
+//                welcomeText.setText(String.format(welcomeTextFormat, userName));
             }
 
             @Override
@@ -54,11 +55,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        signOut.setOnClickListener(v -> {
-            mAuth.signOut();
-            Intent intent = new Intent(this, SignInActivity.class);
-            startActivity(intent);
-        });
+//        signOut.setOnClickListener(v -> {
+//            mAuth.signOut();
+//            Intent intent = new Intent(this, SignInActivity.class);
+//            startActivity(intent);
+//        });
 
     }
 }
