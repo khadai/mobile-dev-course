@@ -1,7 +1,5 @@
 package com.example.fisrtapplication.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
@@ -16,6 +14,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Objects;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class SignUpActivity extends AppCompatActivity {
 
@@ -73,8 +73,6 @@ public class SignUpActivity extends AppCompatActivity {
                 onSignUpFailed(task);
             }
         });
-
-
     }
 
     private void onSignUpSuccess() {
@@ -89,7 +87,7 @@ public class SignUpActivity extends AppCompatActivity {
         Toast.makeText(SignUpActivity.this, regSuccess,
                 Toast.LENGTH_LONG).show();
 
-        startActivity(new Intent(this, MainActivity.class));
+        startActivity(new Intent(this, DataListActivity.class));
 
         email.getText().clear();
         password.getText().clear();

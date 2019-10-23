@@ -1,58 +1,74 @@
 package com.example.fisrtapplication.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
 import android.os.Bundle;
-import android.view.View;
-import android.widget.ListView;
+import android.os.Handler;
 
-import com.example.fisrtapplication.ApplicationEx;
 import com.example.fisrtapplication.R;
 import com.example.fisrtapplication.adapters.VendingsAdapter;
 import com.example.fisrtapplication.api.VendingApiClient;
 import com.example.fisrtapplication.entities.Vending;
+import com.example.fisrtapplication.utils.ApplicationEx;
 
 import java.util.List;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class DataListActivity extends AppCompatActivity {
 
-    private RecyclerView vendingsListView;
+    private RecyclerView recyclerView;
     private VendingsAdapter vendingsAdapter;
+    private SwipeRefreshLayout refreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        vendingsAdapter = new VendingsAdapter();
-        vendingsListView.setAdapter(vendingsAdapter);
-
-    }
-    
-    private void setupViews(){
-        vendingsListView = findViewById(R.id.recycler_view);
+        setupViews();
+        loadMovies();
+        swipeToRefresh();
     }
 
-    private void loadMovies(){
-        final VendingApiClient apiClient = getApplicationEx().getVendingApiClient();
-        apiClient.getVendings().enqueue(new Callback<List<Vending>>() {
+    private void swipeToRefresh(){
+        refreshLayout.setOnRefreshListener(() -> {
+            loadMovies();
+            new Handler().postDelayed(() -> refreshLayout.setRefreshing(false), 4000);
+        });
+    }
+
+    private void setupViews() {
+        recyclerView = findViewById(R.id.recycler_view);
+        refreshLayout = findViewById(R.id.swipe_refresher);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+    }
+
+    private void loadMovies() {
+        final VendingApiClient apiService = getApplicationEx().getVendingApiClient();
+        final Call<List<Vending>> call = apiService.getVendings();
+
+        call.enqueue(new Callback<List<Vending>>() {
             @Override
-            public void onResponse(Call<List<Vending>> call, Response<List<Vending>> response) {
-                vendingsAdapter.updateVendings(response.body());
+            public void onResponse(final Call<List<Vending>> call,
+                                   final Response<List<Vending>> response) {
+                vendingsAdapter = new VendingsAdapter(response.body());
+                recyclerView.setAdapter(vendingsAdapter);
             }
 
             @Override
             public void onFailure(Call<List<Vending>> call, Throwable t) {
-
             }
         });
+
     }
 
-    private ApplicationEx getApplicationEx(){
+    private ApplicationEx getApplicationEx() {
         return ((ApplicationEx) getApplication());
     }
 }

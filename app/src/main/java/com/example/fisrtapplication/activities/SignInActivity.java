@@ -1,7 +1,5 @@
 package com.example.fisrtapplication.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
@@ -14,6 +12,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Objects;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class SignInActivity extends AppCompatActivity {
     private EditText email;
@@ -62,7 +62,7 @@ public class SignInActivity extends AppCompatActivity {
     }
 
     private void onSignInSuccess() {
-        startActivity(new Intent(this, MainActivity.class));
+        startActivity(new Intent(this, DataListActivity.class));
     }
 
     private void onSignInFailed(Task<AuthResult> task) {
