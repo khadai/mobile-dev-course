@@ -16,6 +16,7 @@ public class ApplicationEx extends Application {
     private FirebaseAuth mAuth;
     private VendingApiClient vendingApiClient;
 
+    @Override
     public void onCreate() {
         super.onCreate();
 

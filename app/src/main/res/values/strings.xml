@@ -3,7 +3,7 @@
     <string name="welcome_username">Welcome, USERNAME!</string>
     <string name="welcome_name">Welcome, %s!</string>
     <string name="sign_out">Sign Out</string>
-    <string name="sign_in">Sign in</string>
+    <string name="sign_in">Sign In</string>
     <string name="email">Email</string>
     <string name="name">Name</string>
     <string name="phone">Phone</string>

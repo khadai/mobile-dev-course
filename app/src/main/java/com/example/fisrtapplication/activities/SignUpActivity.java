@@ -24,6 +24,9 @@ public class SignUpActivity extends AppCompatActivity {
     private EditText phone;
     private EditText name;
 
+    private Button linkSignIn;
+    private Button userSignUp;
+
     private FirebaseAuth mAuth;
     private FirebaseDatabase mBase;
 
@@ -32,18 +35,13 @@ public class SignUpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
-        email = findViewById(R.id.email_sign_up);
-        password = findViewById(R.id.password_sign_up);
-        phone = findViewById(R.id.phone_sign_up);
-        name = findViewById(R.id.name_sign_up);
-        Button signUp = findViewById(R.id.sign_up_button);
-        Button linkSignIn = findViewById(R.id.sign_in_link);
+        setupViews();
 
         mAuth = FirebaseAuth.getInstance();
         mBase = FirebaseDatabase.getInstance();
 
 
-        signUp.setOnClickListener(v -> {
+        userSignUp.setOnClickListener(v -> {
                     String emailString = email.getText().toString();
                     String passwordString = password.getText().toString();
                     String nameString = name.getText().toString();
@@ -59,9 +57,18 @@ public class SignUpActivity extends AppCompatActivity {
 
     }
 
+    public void setupViews(){
+        email = findViewById(R.id.email_sign_up);
+        password = findViewById(R.id.password_sign_up);
+        phone = findViewById(R.id.phone_sign_up);
+        name = findViewById(R.id.name_sign_up);
+        userSignUp = findViewById(R.id.sign_up_button);
+        linkSignIn = findViewById(R.id.sign_in_link);
+    }
+
     private void signUp(final String email, final String name, final String phone,
                         final String password) {
-        if (!validateEmail(email) || !validateName(name) || !validatePhone(phone) ||
+        if (!validateEmail(email) | !validateName(name) | !validatePhone(phone) |
                 !validatePassword(password))
             return;
 

@@ -28,11 +28,7 @@ public class SignInActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
 
-        email = findViewById(R.id.email_sign_in);
-        password = findViewById(R.id.password_sign_in);
-        userSignIn = findViewById(R.id.sign_in_button);
-        linkSignUp = findViewById(R.id.sign_up_link);
-
+        setupViews();
         mAuth = FirebaseAuth.getInstance();
 
         userSignIn.setOnClickListener(v -> {
@@ -47,8 +43,15 @@ public class SignInActivity extends AppCompatActivity {
         });
     }
 
+    public void setupViews() {
+        email = findViewById(R.id.email_sign_in);
+        password = findViewById(R.id.password_sign_in);
+        userSignIn = findViewById(R.id.sign_in_button);
+        linkSignUp = findViewById(R.id.sign_up_link);
+    }
+
     private void signIn(final String email, final String password) {
-        if (!validateEmail(email) || !validatePassword(password))
+        if (!validateEmail(email) | !validatePassword(password))
             return;
 
         mAuth.signInWithEmailAndPassword(email,

@@ -39,7 +39,12 @@ public class VendingsAdapter extends RecyclerView.Adapter<VendingsAdapter.Vendin
         holder.vendingCompany.setText(vendings.get(position).getCompany());
         holder.vendingGood.setText(vendings.get(position).getGood());
         holder.vendingAddress.setText(vendings.get(position).getAddress());
-        Picasso.get().load(vendings.get(position).getPicture()).into(holder.vendingImageUrl);
+        Picasso.get()
+                .load(vendings.get(position).getPicture())
+                .placeholder(R.drawable.vending_placeholder)
+                .resize(88, 86)
+                .centerCrop()
+                .into(holder.vendingImageUrl);
 
     }
 
