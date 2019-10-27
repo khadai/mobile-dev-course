@@ -16,4 +16,5 @@
     <string name="reg_success">Registered successfully!</string>
     <string name="name_regex">^[A-Za-z]+$</string>
     <string name="name_path">users/%s/name"</string>
+    <string name="connection_error">Please check your connection!</string>
 </resources>
