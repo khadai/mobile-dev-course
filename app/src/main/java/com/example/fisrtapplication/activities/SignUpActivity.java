@@ -2,8 +2,10 @@ package com.example.fisrtapplication.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.fisrtapplication.R;
@@ -26,6 +28,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     private Button linkSignIn;
     private Button userSignUp;
+    private ProgressBar progressBar;
 
     private FirebaseAuth mAuth;
     private FirebaseDatabase mBase;
@@ -57,13 +60,14 @@ public class SignUpActivity extends AppCompatActivity {
 
     }
 
-    public void setupViews(){
+    public void setupViews() {
         email = findViewById(R.id.email_sign_up);
         password = findViewById(R.id.password_sign_up);
         phone = findViewById(R.id.phone_sign_up);
         name = findViewById(R.id.name_sign_up);
         userSignUp = findViewById(R.id.sign_up_button);
         linkSignIn = findViewById(R.id.sign_in_link);
+        progressBar = findViewById(R.id.progress_bar_sign_up);
     }
 
     private void signUp(final String email, final String name, final String phone,
@@ -71,9 +75,11 @@ public class SignUpActivity extends AppCompatActivity {
         if (!validateEmail(email) | !validateName(name) | !validatePhone(phone) |
                 !validatePassword(password))
             return;
+        progressBar.setVisibility(View.VISIBLE);
 
         mAuth.createUserWithEmailAndPassword(email,
                 password).addOnCompleteListener(task -> {
+            progressBar.setVisibility(View.INVISIBLE);
             if (task.isSuccessful()) {
                 onSignUpSuccess();
             } else {

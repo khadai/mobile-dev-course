@@ -2,8 +2,10 @@ package com.example.fisrtapplication.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.fisrtapplication.R;
@@ -18,6 +20,7 @@ import androidx.appcompat.app.AppCompatActivity;
 public class SignInActivity extends AppCompatActivity {
     private EditText email;
     private EditText password;
+    private ProgressBar progressBar;
 
     private Button userSignIn;
     private Button linkSignUp;
@@ -36,6 +39,7 @@ public class SignInActivity extends AppCompatActivity {
             String passwordString = password.getText().toString();
 
             signIn(emailString, passwordString);
+
         });
 
         linkSignUp.setOnClickListener(v -> {
@@ -48,14 +52,17 @@ public class SignInActivity extends AppCompatActivity {
         password = findViewById(R.id.password_sign_in);
         userSignIn = findViewById(R.id.sign_in_button);
         linkSignUp = findViewById(R.id.sign_up_link);
+        progressBar = findViewById(R.id.progressBar);
     }
 
     private void signIn(final String email, final String password) {
         if (!validateEmail(email) | !validatePassword(password))
             return;
+        progressBar.setVisibility(View.VISIBLE);
 
         mAuth.signInWithEmailAndPassword(email,
                 password).addOnCompleteListener(task -> {
+            progressBar.setVisibility(View.INVISIBLE);
             if (task.isSuccessful()) {
                 onSignInSuccess();
             } else {

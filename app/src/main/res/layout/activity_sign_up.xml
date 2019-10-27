@@ -6,12 +6,24 @@
     android:layout_height="match_parent"
     tools:context=".activities.SignUpActivity">
 
+    <ProgressBar
+        android:id="@+id/progress_bar_sign_up"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/textView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
         android:layout_marginBottom="32dp"
         android:text="@string/sign_up"
         android:textColor="#000000"
@@ -19,21 +31,6 @@
         app:layout_constraintBottom_toTopOf="@+id/email_sign_up1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.48"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.505" />
-
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/sign_up_button"
-        style="@android:style/Widget.Material.Button.Borderless.Colored"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/colorPrimaryDark"
-        android:text="@string/sign_up"
-        android:textColor="@android:color/white"
-        app:layout_constraintBottom_toTopOf="@+id/sign_in_link"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
 
@@ -50,6 +47,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/sign_up_button"
+        style="@android:style/Widget.Material.Button.Borderless.Colored"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/colorPrimaryDark"
+        android:text="@string/sign_up"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toTopOf="@+id/sign_in_link"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/email_sign_up1"
@@ -71,7 +79,6 @@
             android:inputType="textEmailAddress" />
     </com.google.android.material.textfield.TextInputLayout>
 
-
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/name_sign_up1"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -91,7 +98,6 @@
             android:hint="@string/name"
             android:inputType="textEmailAddress" />
     </com.google.android.material.textfield.TextInputLayout>
-
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/phone_sign_up1"
