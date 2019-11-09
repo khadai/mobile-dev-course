@@ -18,6 +18,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class VendingsAdapter extends RecyclerView.Adapter<VendingsAdapter.VendingViewHolder> {
     private List<Vending> vendings;
+    private final int TARGET_WIDTH = 88;
+    private final int TARGET_HEIGHT = 86;
 
     public VendingsAdapter(List<Vending> vendings) {
         this.vendings = vendings;
@@ -42,10 +44,9 @@ public class VendingsAdapter extends RecyclerView.Adapter<VendingsAdapter.Vendin
         Picasso.get()
                 .load(vendings.get(position).getPicture())
                 .placeholder(R.drawable.vending_placeholder)
-                .resize(88, 86)
+                .resize(TARGET_WIDTH, TARGET_HEIGHT)
                 .centerCrop()
                 .into(holder.vendingImageUrl);
-
     }
 
     @Override
