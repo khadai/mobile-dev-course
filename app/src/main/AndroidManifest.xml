@@ -4,7 +4,7 @@
     package="com.example.fisrtapplication">
 
     <application
-        android:name=".Home"
+        android:name=".utils.ApplicationEx"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -13,16 +13,18 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
-            android:name=".MainActivity"
+            android:name=".activities.DataListActivity"
+            android:label="List of Vendings"
             android:noHistory="true"
-            android:screenOrientation="portrait"
-            />
+            android:screenOrientation="portrait" />
         <activity
-            android:name=".SignUpActivity"
+            android:name=".activities.SignUpActivity"
+            android:label="Sign Up"
             android:noHistory="true"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
-            android:name=".SignInActivity"
+            android:name=".activities.SignInActivity"
+            android:label="Sign In"
             android:noHistory="true"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -31,6 +33,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <receiver android:name=".utils.ConnectionChangeReceiver">
+            <intent-filter>
+                <action
+                    android:name="android.net.conn.CONNECTIVITY_CHANGE"
+                    tools:ignore="BatteryLife" />
+                <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
+            </intent-filter>
+        </receiver>
     </application>
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
 </manifest>

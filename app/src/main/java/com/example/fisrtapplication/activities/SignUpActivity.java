@@ -1,13 +1,14 @@
-package com.example.fisrtapplication;
-
-import androidx.appcompat.app.AppCompatActivity;
+package com.example.fisrtapplication.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.fisrtapplication.R;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -16,12 +17,18 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Objects;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 public class SignUpActivity extends AppCompatActivity {
 
     private EditText email;
     private EditText password;
     private EditText phone;
     private EditText name;
+
+    private Button linkSignIn;
+    private Button userSignUp;
+    private ProgressBar progressBar;
 
     private FirebaseAuth mAuth;
     private FirebaseDatabase mBase;
@@ -31,18 +38,13 @@ public class SignUpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
-        email = findViewById(R.id.email_sign_up);
-        password = findViewById(R.id.password_sign_up);
-        phone = findViewById(R.id.phone_sign_up);
-        name = findViewById(R.id.name_sign_up);
-        Button signUp = findViewById(R.id.sign_up_button);
-        Button linkSignIn = findViewById(R.id.sign_in_link);
+        setupViews();
 
         mAuth = FirebaseAuth.getInstance();
         mBase = FirebaseDatabase.getInstance();
 
 
-        signUp.setOnClickListener(v -> {
+        userSignUp.setOnClickListener(v -> {
                     String emailString = email.getText().toString();
                     String passwordString = password.getText().toString();
                     String nameString = name.getText().toString();
@@ -58,22 +60,32 @@ public class SignUpActivity extends AppCompatActivity {
 
     }
 
+    public void setupViews() {
+        email = findViewById(R.id.email_sign_up);
+        password = findViewById(R.id.password_sign_up);
+        phone = findViewById(R.id.phone_sign_up);
+        name = findViewById(R.id.name_sign_up);
+        userSignUp = findViewById(R.id.sign_up_button);
+        linkSignIn = findViewById(R.id.sign_in_link);
+        progressBar = findViewById(R.id.progress_bar_sign_up);
+    }
+
     private void signUp(final String email, final String name, final String phone,
                         final String password) {
-        if (!validateEmail(email) || !validateName(name) || !validatePhone(phone) ||
+        if (!validateEmail(email) | !validateName(name) | !validatePhone(phone) |
                 !validatePassword(password))
             return;
+        progressBar.setVisibility(View.VISIBLE);
 
         mAuth.createUserWithEmailAndPassword(email,
                 password).addOnCompleteListener(task -> {
+            progressBar.setVisibility(View.INVISIBLE);
             if (task.isSuccessful()) {
                 onSignUpSuccess();
             } else {
                 onSignUpFailed(task);
             }
         });
-
-
     }
 
     private void onSignUpSuccess() {
@@ -88,7 +100,7 @@ public class SignUpActivity extends AppCompatActivity {
         Toast.makeText(SignUpActivity.this, regSuccess,
                 Toast.LENGTH_LONG).show();
 
-        startActivity(new Intent(this, MainActivity.class));
+        startActivity(new Intent(this, DataListActivity.class));
 
         email.getText().clear();
         password.getText().clear();

@@ -3,7 +3,7 @@
     <string name="welcome_username">Welcome, USERNAME!</string>
     <string name="welcome_name">Welcome, %s!</string>
     <string name="sign_out">Sign Out</string>
-    <string name="sign_in">Sign in</string>
+    <string name="sign_in">Sign In</string>
     <string name="email">Email</string>
     <string name="name">Name</string>
     <string name="phone">Phone</string>
@@ -15,5 +15,6 @@
     <string name="name_error">Enter a valid name</string>
     <string name="reg_success">Registered successfully!</string>
     <string name="name_regex">^[A-Za-z]+$</string>
-    <string name="name_path" >users/%s/name"</string>
+    <string name="name_path">users/%s/name"</string>
+    <string name="connection_error">Please check your connection!</string>
 </resources>
