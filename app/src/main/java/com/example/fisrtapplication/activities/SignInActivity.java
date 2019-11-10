@@ -39,7 +39,6 @@ public class SignInActivity extends AppCompatActivity {
             String passwordString = password.getText().toString();
 
             signIn(emailString, passwordString);
-
         });
 
         linkSignUp.setOnClickListener(v -> {
