@@ -20,4 +20,7 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="profile">Profile</string>
+    <string name="enter_new_email">Enter new email:</string>
+    <string name="enter_new_name">Enter new name:</string>
 </resources>

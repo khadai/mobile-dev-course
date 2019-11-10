@@ -50,14 +50,6 @@ public class DataListFragment extends Fragment {
         // Required empty public constructor
     }
 
-//    @Override
-////    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-////                             Bundle savedInstanceState) {
-////        TextView textView = new TextView(getActivity());
-////        textView.setText(R.string.hello_blank_fragment);
-////        return textView;
-////    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -69,7 +61,6 @@ public class DataListFragment extends Fragment {
         setSwipeToRefresh();
         return rootView;
     }
-
 
     private void checkConnection() {
         IntentFilter filter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
@@ -123,7 +114,6 @@ public class DataListFragment extends Fragment {
                 progressBar.setVisibility(View.INVISIBLE);
             }
         });
-
     }
 
     private ApplicationEx getApplicationEx() {
