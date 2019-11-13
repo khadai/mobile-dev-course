@@ -54,7 +54,6 @@ public class ItemDetailsActivity extends AppCompatActivity {
                 .load(imageName)
                 .placeholder(R.drawable.vending_placeholder)
                 .resize(TARGET_WIDTH, TARGET_HEIGHT)
-                .centerCrop()
                 .into(imageView);
         name.setText(vendingName);
         goods.setText(vendingGoods);

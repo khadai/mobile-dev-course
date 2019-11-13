@@ -71,7 +71,7 @@ public class SignInActivity extends AppCompatActivity {
     }
 
     private void onSignInSuccess() {
-        startActivity(new Intent(this, DataListActivity.class));
+        startActivity(new Intent(this, MainActivity.class));
     }
 
     private void onSignInFailed(Task<AuthResult> task) {

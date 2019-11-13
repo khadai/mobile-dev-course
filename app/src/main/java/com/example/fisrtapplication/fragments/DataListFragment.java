@@ -32,9 +32,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-/**
- * A simple {@link Fragment} subclass.
- */
+
 public class DataListFragment extends Fragment {
     private RecyclerView recyclerView;
     private VendingsAdapter vendingsAdapter;
@@ -42,9 +40,7 @@ public class DataListFragment extends Fragment {
     private FirebaseAuth mAuth;
     private ProgressBar progressBar;
     private View content;
-
     private View rootView;
-
 
     public DataListFragment() {
         // Required empty public constructor
@@ -65,7 +61,7 @@ public class DataListFragment extends Fragment {
     private void checkConnection() {
         IntentFilter filter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
         ConnectionChangeReceiver receiver = new ConnectionChangeReceiver(content);
-        getActivity().registerReceiver(receiver, filter);
+        Objects.requireNonNull(getActivity()).registerReceiver(receiver, filter);
     }
 
     @Override

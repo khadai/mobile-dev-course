@@ -43,7 +43,6 @@ public class SignUpActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         mBase = FirebaseDatabase.getInstance();
 
-
         userSignUp.setOnClickListener(v -> {
                     String emailString = email.getText().toString();
                     String passwordString = password.getText().toString();
@@ -95,12 +94,13 @@ public class SignUpActivity extends AppCompatActivity {
         mBase.getReference("users").child(user.getUid()).child("phone").setValue(phone.getText().toString());
         mBase.getReference("users").child(user.getUid()).child("name").setValue(name.getText().toString());
         mBase.getReference("users").child(user.getUid()).child("email").setValue(email.getText().toString());
+        mBase.getReference("users").child(user.getUid()).child("imageURL").setValue("default");
 
         String regSuccess = getString(R.string.reg_success);
         Toast.makeText(SignUpActivity.this, regSuccess,
                 Toast.LENGTH_LONG).show();
 
-        startActivity(new Intent(this, DataListActivity.class));
+        startActivity(new Intent(this, MainActivity.class));
 
         email.getText().clear();
         password.getText().clear();
