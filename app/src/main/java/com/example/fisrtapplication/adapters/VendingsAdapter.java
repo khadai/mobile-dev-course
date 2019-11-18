@@ -21,8 +21,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class VendingsAdapter extends RecyclerView.Adapter<VendingsAdapter.VendingViewHolder> {
     private final List<Vending> vendings;
-    private final int TARGET_WIDTH = 88;
-    private final int TARGET_HEIGHT = 86;
+    private static final int TARGET_WIDTH = 88;
+    private static final int TARGET_HEIGHT = 86;
     private Context mContext;
 
     public VendingsAdapter(Context context, List<Vending> vendings) {
@@ -58,7 +58,7 @@ public class VendingsAdapter extends RecyclerView.Adapter<VendingsAdapter.Vendin
         });
     }
 
-    private void openItemDetails(int position){
+    private void openItemDetails(int position) {
         Intent intent = new Intent(mContext, ItemDetailsActivity.class);
         intent.putExtra("vending_name", vendings.get(position).getName());
         intent.putExtra("vending_company", vendings.get(position).getCompany());

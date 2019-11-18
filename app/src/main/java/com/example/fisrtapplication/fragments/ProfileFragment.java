@@ -1,9 +1,7 @@
 package com.example.fisrtapplication.fragments;
 
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -14,11 +12,10 @@ import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.fisrtapplication.R;
-import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -47,20 +44,22 @@ public class ProfileFragment extends Fragment {
     private Button newNameButton;
     private EditText newEmail;
     private EditText newName;
-
-    private String password;
+    private TextView profileName;
+    private TextView profileEmail;
 
     private FirebaseUser fuser;
     private DatabaseReference reference;
 
     private StorageReference storageReference;
     private static final int IMAGE_REQUEST = 1;
-    private final int TARGET_WIDTH = 100;
-    private final int TARGET_HEIGHT = 100;
+    private static final int TARGET_WIDTH = 100;
+    private static final int TARGET_HEIGHT = 100;
     private Uri imageUri;
     private StorageTask<UploadTask.TaskSnapshot> uploadTask;
 
     private DatabaseReference urlRef;
+    private DatabaseReference nameRef;
+    private DatabaseReference emailRef;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -78,9 +77,13 @@ public class ProfileFragment extends Fragment {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Toast.makeText(getContext(), "Failed to load image", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), Objects.requireNonNull(getContext()).
+                        getString(R.string.failed_load_image), Toast.LENGTH_SHORT).show();
             }
         });
+
+        showEmail();
+        showName();
 
         uploadImgButton.setOnClickListener(view -> openImage());
         newNameButton.setOnClickListener(view -> updateName());
@@ -89,48 +92,39 @@ public class ProfileFragment extends Fragment {
         return inflate;
     }
 
-    private void updateEmail() {
-        String email = newEmail.getText().toString();
-
-        if (password != null) {
-            showDialog();
-        }
-        if (validateEmail(email)) {
-            AuthCredential credential = EmailAuthProvider
-                    .getCredential(email, password); // Current Login Credentials \\
-            // Prompt the user to re-provide their sign-in credentials
-            fuser.reauthenticate(credential)
-                    .addOnCompleteListener(task -> {
-                        Toast.makeText(getContext(), "User re-authenticated", Toast.LENGTH_SHORT).show();
-                        //Now change your email address \\
-                        //----------------Code for Changing Email Address----------\\
-                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                        user.updateEmail("user@example.com")
-                                .addOnCompleteListener(task1 -> {
-                                    if (task1.isSuccessful()) {
-                                        Toast.makeText(getContext(), "User email address updated.", Toast.LENGTH_SHORT).show();
-
-                                    }
-                                });
-                        //----------------------------------------------------------\\
-                    });
-        }
+    private void showEmail() {
+        String email = fuser.getEmail();
+        profileEmail.setText(email);
     }
 
-    private void showDialog() {
-        AlertDialog dialog = new AlertDialog.Builder(getContext()).create();
-        EditText editText = new EditText(getContext());
-        editText.setInputType(128);
+    private void showName(){
+        nameRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String value = dataSnapshot.getValue(String.class);
+                profileName.setText(value);
+            }
 
-        dialog.setTitle("Confirm password: ");
-        dialog.setView(editText);
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(getContext(), "Failed to load name", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
-        dialog.setButton(DialogInterface.BUTTON_POSITIVE, "Confirm",
-                (dialogInterface, i) -> {
-                    password = editText.getText().toString();
-                    Toast.makeText(getContext(), "Now email address can be updated", Toast.LENGTH_SHORT).show();
-                });
-        dialog.show();
+    private void updateEmail() {
+        String email = newEmail.getText().toString();
+//        if (validateEmail(email)) {
+            fuser.updateEmail(email)
+                    .addOnCompleteListener(task1 -> {
+                        if (task1.isSuccessful()) {
+                            Toast.makeText(getContext(), "User email address updated.",
+                                    Toast.LENGTH_SHORT).show();
+                            newEmail.getText().clear();
+                            showEmail();
+                        }
+                    });
+//        }
     }
 
     private void updateName() {
@@ -139,6 +133,7 @@ public class ProfileFragment extends Fragment {
             reference.child("name").setValue(name);
             Toast.makeText(getContext(), "Name updated", Toast.LENGTH_SHORT).show();
             newName.getText().clear();
+            showName();
         }
     }
 
@@ -151,8 +146,12 @@ public class ProfileFragment extends Fragment {
         newNameButton = inflate.findViewById(R.id.new_name_button);
         newName = inflate.findViewById(R.id.name_new);
         newEmail = inflate.findViewById(R.id.email_new);
+        profileName = inflate.findViewById(R.id.username);
+        profileEmail = inflate.findViewById(R.id.user_email);
         profileImage = inflate.findViewById(R.id.image_profile);
         urlRef = reference.child("imageURL");
+        nameRef = reference.child("name");
+        emailRef = reference.child("email");
     }
 
     private void openImage() {
@@ -251,8 +250,5 @@ public class ProfileFragment extends Fragment {
             newName.setError(null);
             return true;
         }
-    }
-
-    public ProfileFragment() {
     }
 }

@@ -20,7 +20,6 @@ import java.util.Objects;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class SignUpActivity extends AppCompatActivity {
-
     private EditText email;
     private EditText password;
     private EditText phone;
@@ -89,13 +88,11 @@ public class SignUpActivity extends AppCompatActivity {
 
     private void onSignUpSuccess() {
         FirebaseUser user = mAuth.getCurrentUser();
-
-        assert user != null;
-        mBase.getReference("users").child(user.getUid()).child("phone").setValue(phone.getText().toString());
-        mBase.getReference("users").child(user.getUid()).child("name").setValue(name.getText().toString());
-        mBase.getReference("users").child(user.getUid()).child("email").setValue(email.getText().toString());
-        mBase.getReference("users").child(user.getUid()).child("imageURL").setValue("default");
-
+        if (user != null) {
+            mBase.getReference("users").child(user.getUid()).child("phone").setValue(phone.getText().toString());
+            mBase.getReference("users").child(user.getUid()).child("name").setValue(name.getText().toString());
+            mBase.getReference("users").child(user.getUid()).child("imageURL").setValue("default");
+        }
         String regSuccess = getString(R.string.reg_success);
         Toast.makeText(SignUpActivity.this, regSuccess,
                 Toast.LENGTH_LONG).show();

@@ -13,11 +13,10 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
-public class CategoryAdapter extends FragmentPagerAdapter {
+public class PagerAdapter extends FragmentPagerAdapter {
     private Context mContext;
 
-
-    public CategoryAdapter(Context context, @NonNull FragmentManager fm) {
+    public PagerAdapter(Context context, @NonNull FragmentManager fm) {
         super(fm);
         mContext = context;
     }
@@ -25,12 +24,13 @@ public class CategoryAdapter extends FragmentPagerAdapter {
     @NonNull
     @Override
     public Fragment getItem(int position) {
-        if (position == 0) {
-            return new DataListFragment();
-        } else if (position == 1) {
-            return new BlankFragment();
-        } else {
-            return new ProfileFragment();
+        switch (position) {
+            case (0):
+                return new DataListFragment();
+            case (1):
+                return new BlankFragment();
+            default:
+                return new ProfileFragment();
         }
     }
 
@@ -42,12 +42,13 @@ public class CategoryAdapter extends FragmentPagerAdapter {
     @Nullable
     @Override
     public CharSequence getPageTitle(int position) {
-        if (position == 0) {
-            return mContext.getString(R.string.vendings);
-        } else if (position == 1) {
-            return mContext.getString(R.string.blank);
-        } else {
-            return mContext.getString(R.string.profile);
+        switch (position) {
+            case (0):
+                return mContext.getString(R.string.vendings);
+            case (1):
+                return mContext.getString(R.string.blank);
+            default:
+                return mContext.getString(R.string.profile);
         }
     }
 }

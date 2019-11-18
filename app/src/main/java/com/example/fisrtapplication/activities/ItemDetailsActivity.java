@@ -1,7 +1,6 @@
 package com.example.fisrtapplication.activities;
 
 import android.os.Bundle;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,9 +12,8 @@ import java.util.Objects;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class ItemDetailsActivity extends AppCompatActivity {
-    private final int TARGET_WIDTH = 100;
-    private final int TARGET_HEIGHT = 100;
-    private Button button;
+    private static final int TARGET_WIDTH = 100;
+    private static final int TARGET_HEIGHT = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,10 +23,10 @@ public class ItemDetailsActivity extends AppCompatActivity {
         Objects.requireNonNull(getSupportActionBar()).setTitle("Vending Details");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        getIncomingIntent();
+        displayVendingFromIntent();
     }
 
-    private void getIncomingIntent() {
+    private void displayVendingFromIntent() {
         if (getIntent().hasExtra("vending_name") &&
                 getIntent().hasExtra("vending_company") &&
                 getIntent().hasExtra("vending_goods") &&
@@ -40,11 +38,12 @@ public class ItemDetailsActivity extends AppCompatActivity {
             String vendingCompany = getIntent().getStringExtra("vending_company");
             String imageName = getIntent().getStringExtra("vending_img_url");
 
-            setImage(vendingName, vendingGoods, vendingAddress, vendingCompany, imageName);
+            setupFields(vendingName, vendingGoods, vendingAddress, vendingCompany, imageName);
         }
     }
 
-    private void setImage(String vendingName, String vendingGoods, String vendingAddress, String vendingCompany, String imageName) {
+    private void setupFields(String vendingName, String vendingGoods, String vendingAddress,
+                             String vendingCompany, String imageName) {
         TextView name = findViewById(R.id.ven_name_detailed);
         TextView goods = findViewById(R.id.ven_goods_detailed);
         TextView address = findViewById(R.id.ven_address_detailed);

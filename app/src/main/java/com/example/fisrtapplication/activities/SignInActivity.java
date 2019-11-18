@@ -12,6 +12,7 @@ import com.example.fisrtapplication.R;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Objects;
 
@@ -25,6 +26,7 @@ public class SignInActivity extends AppCompatActivity {
     private Button userSignIn;
     private Button linkSignUp;
     private FirebaseAuth mAuth;
+    private FirebaseUser user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,12 +34,12 @@ public class SignInActivity extends AppCompatActivity {
         setContentView(R.layout.activity_sign_in);
 
         setupViews();
+        staySigned();
         mAuth = FirebaseAuth.getInstance();
 
         userSignIn.setOnClickListener(v -> {
             String emailString = email.getText().toString();
             String passwordString = password.getText().toString();
-
             signIn(emailString, passwordString);
         });
 
@@ -46,12 +48,21 @@ public class SignInActivity extends AppCompatActivity {
         });
     }
 
+    public void staySigned() {
+        if (user != null) {
+            Intent i = new Intent(SignInActivity.this, MainActivity.class);
+            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(i);
+        }
+    }
+
     public void setupViews() {
         email = findViewById(R.id.email_sign_in);
         password = findViewById(R.id.password_sign_in);
         userSignIn = findViewById(R.id.sign_in_button);
         linkSignUp = findViewById(R.id.sign_up_link);
         progressBar = findViewById(R.id.progressBar);
+        user = FirebaseAuth.getInstance().getCurrentUser();
     }
 
     private void signIn(final String email, final String password) {

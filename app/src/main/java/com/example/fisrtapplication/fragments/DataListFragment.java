@@ -42,10 +42,6 @@ public class DataListFragment extends Fragment {
     private View content;
     private View rootView;
 
-    public DataListFragment() {
-        // Required empty public constructor
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -53,7 +49,7 @@ public class DataListFragment extends Fragment {
 
         setupViews();
         checkConnection();
-        loadMovies();
+        loadVendings();
         setSwipeToRefresh();
         return rootView;
     }
@@ -76,7 +72,7 @@ public class DataListFragment extends Fragment {
 
     private void setSwipeToRefresh() {
         refreshLayout.setOnRefreshListener(() -> {
-            loadMovies();
+            loadVendings();
             new Handler().postDelayed(() -> refreshLayout.setRefreshing(false), 0);
         });
     }
@@ -91,7 +87,7 @@ public class DataListFragment extends Fragment {
         mAuth = getApplicationEx().getAuth();
     }
 
-    private void loadMovies() {
+    private void loadVendings() {
         progressBar.setVisibility(View.VISIBLE);
         final VendingApiClient apiService = getApplicationEx().getVendingApiClient();
         final Call<List<Vending>> call = apiService.getVendings();
@@ -115,5 +111,4 @@ public class DataListFragment extends Fragment {
     private ApplicationEx getApplicationEx() {
         return ((ApplicationEx) Objects.requireNonNull(getActivity()).getApplication());
     }
-
 }
