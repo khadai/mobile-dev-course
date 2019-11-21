@@ -20,7 +20,7 @@ public class ItemDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_details);
 
-        Objects.requireNonNull(getSupportActionBar()).setTitle("Vending Details");
+        Objects.requireNonNull(getSupportActionBar()).setTitle(getString(R.string.ven_details));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         displayVendingFromIntent();

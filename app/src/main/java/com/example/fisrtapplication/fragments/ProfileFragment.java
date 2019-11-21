@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.fisrtapplication.R;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -38,6 +39,10 @@ import androidx.fragment.app.Fragment;
 import static android.app.Activity.RESULT_OK;
 
 public class ProfileFragment extends Fragment {
+    private static final int IMAGE_REQUEST = 1;
+    private static final int TARGET_WIDTH = 100;
+    private static final int TARGET_HEIGHT = 100;
+
     private Button uploadImgButton;
     private ImageView profileImage;
     private Button newEmailButton;
@@ -46,20 +51,17 @@ public class ProfileFragment extends Fragment {
     private EditText newName;
     private TextView profileName;
     private TextView profileEmail;
+    private ProgressDialog progressDialog;
 
-    private FirebaseUser fuser;
+    private FirebaseUser firebaseUser;
     private DatabaseReference reference;
 
     private StorageReference storageReference;
-    private static final int IMAGE_REQUEST = 1;
-    private static final int TARGET_WIDTH = 100;
-    private static final int TARGET_HEIGHT = 100;
     private Uri imageUri;
     private StorageTask<UploadTask.TaskSnapshot> uploadTask;
 
     private DatabaseReference urlRef;
     private DatabaseReference nameRef;
-    private DatabaseReference emailRef;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -93,11 +95,11 @@ public class ProfileFragment extends Fragment {
     }
 
     private void showEmail() {
-        String email = fuser.getEmail();
+        String email = firebaseUser.getEmail();
         profileEmail.setText(email);
     }
 
-    private void showName(){
+    private void showName() {
         nameRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -107,31 +109,31 @@ public class ProfileFragment extends Fragment {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Toast.makeText(getContext(), "Failed to load name", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getString(R.string.failed_load_image), Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void updateEmail() {
         String email = newEmail.getText().toString();
-//        if (validateEmail(email)) {
-            fuser.updateEmail(email)
+        if (validateEmail(email)) {
+            firebaseUser.updateEmail(email)
                     .addOnCompleteListener(task1 -> {
                         if (task1.isSuccessful()) {
-                            Toast.makeText(getContext(), "User email address updated.",
+                            Toast.makeText(getContext(), getString(R.string.email_updated),
                                     Toast.LENGTH_SHORT).show();
                             newEmail.getText().clear();
                             showEmail();
                         }
                     });
-//        }
+        }
     }
 
     private void updateName() {
         String name = newName.getText().toString();
         if (validateName(name)) {
             reference.child("name").setValue(name);
-            Toast.makeText(getContext(), "Name updated", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getString(R.string.name_updated), Toast.LENGTH_SHORT).show();
             newName.getText().clear();
             showName();
         }
@@ -139,8 +141,8 @@ public class ProfileFragment extends Fragment {
 
     private void setupViews(View inflate) {
         storageReference = FirebaseStorage.getInstance().getReference("uploads");
-        fuser = FirebaseAuth.getInstance().getCurrentUser();
-        reference = FirebaseDatabase.getInstance().getReference("users").child(fuser.getUid());
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        reference = FirebaseDatabase.getInstance().getReference("users").child(firebaseUser.getUid());
         uploadImgButton = inflate.findViewById(R.id.new_image_button);
         newEmailButton = inflate.findViewById(R.id.new_email_button);
         newNameButton = inflate.findViewById(R.id.new_name_button);
@@ -151,7 +153,7 @@ public class ProfileFragment extends Fragment {
         profileImage = inflate.findViewById(R.id.image_profile);
         urlRef = reference.child("imageURL");
         nameRef = reference.child("name");
-        emailRef = reference.child("email");
+        progressDialog = new ProgressDialog(getContext());
     }
 
     private void openImage() {
@@ -168,42 +170,39 @@ public class ProfileFragment extends Fragment {
     }
 
     private void uploadImage() {
-        final ProgressDialog pd = new ProgressDialog(getContext());
-        pd.setMessage("Uploading");
-        pd.show();
+        progressDialog.setMessage(getString(R.string.uploading));
+        progressDialog.show();
         if (imageUri != null) {
             final StorageReference fileReference = storageReference.child(System.currentTimeMillis()
                     + "." + getFileExtension(imageUri));
-
             uploadTask = fileReference.putFile(imageUri);
             uploadTask.continueWithTask(task -> {
                 if (!task.isSuccessful()) {
                     throw Objects.requireNonNull(task.getException());
                 }
                 return fileReference.getDownloadUrl();
-            }).addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    Uri downloadUri = task.getResult();
-                    String mUri = null;
-                    if (downloadUri != null) {
-                        mUri = downloadUri.toString();
-                    }
-                    reference = FirebaseDatabase.getInstance().getReference("users").child(fuser.getUid());
-                    HashMap<String, Object> map = new HashMap<>();
-                    map.put("imageURL", mUri);
-                    reference.updateChildren(map);
-                    showProfileImage(mUri);
-                    pd.dismiss();
-                } else {
-                    Toast.makeText(getContext(), "Failed", Toast.LENGTH_SHORT).show();
-                    pd.dismiss();
-                }
-            }).addOnFailureListener(e -> {
-                Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
-                pd.dismiss();
-            });
+            }).addOnCompleteListener(this::onCompleteUploadImage);
         } else {
-            Toast.makeText(getContext(), "No image selected", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getString(R.string.no_image), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void onCompleteUploadImage(Task<Uri> task) {
+        if (task.isSuccessful()) {
+            Uri downloadUri = task.getResult();
+            String mUri = null;
+            if (downloadUri != null) {
+                mUri = downloadUri.toString();
+            }
+            reference = FirebaseDatabase.getInstance().getReference("users").child(firebaseUser.getUid());
+            HashMap<String, Object> map = new HashMap<>();
+            map.put("imageURL", mUri);
+            reference.updateChildren(map);
+            showProfileImage(mUri);
+            progressDialog.dismiss();
+        } else {
+            Toast.makeText(getContext(), getString(R.string.failed_load_image), Toast.LENGTH_SHORT).show();
+            progressDialog.dismiss();
         }
     }
 
@@ -214,7 +213,7 @@ public class ProfileFragment extends Fragment {
                 && data != null && data.getData() != null) {
             imageUri = data.getData();
             if (uploadTask != null && uploadTask.isInProgress()) {
-                Toast.makeText(getContext(), "Upload in progress", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getString(R.string.upload_in_progress), Toast.LENGTH_SHORT).show();
             } else {
                 uploadImage();
             }

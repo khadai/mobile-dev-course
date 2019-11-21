@@ -21,12 +21,9 @@ public class ApplicationEx extends Application {
         vendingApiClient = createVendingApiClient();
     }
 
-
-
     public FirebaseAuth getAuth() {
         return mAuth;
     }
-
 
     public VendingApiClient getVendingApiClient() {
         return vendingApiClient;

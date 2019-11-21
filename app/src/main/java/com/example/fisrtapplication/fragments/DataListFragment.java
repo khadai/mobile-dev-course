@@ -1,6 +1,5 @@
 package com.example.fisrtapplication.fragments;
 
-
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
@@ -32,7 +31,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-
 public class DataListFragment extends Fragment {
     private RecyclerView recyclerView;
     private VendingsAdapter vendingsAdapter;
@@ -40,14 +38,13 @@ public class DataListFragment extends Fragment {
     private FirebaseAuth mAuth;
     private ProgressBar progressBar;
     private View content;
-    private View rootView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.activity_main, container, false);
+        View rootView = inflater.inflate(R.layout.activity_main, container, false);
 
-        setupViews();
+        setupViews(rootView);
         checkConnection();
         loadVendings();
         setSwipeToRefresh();
@@ -77,7 +74,7 @@ public class DataListFragment extends Fragment {
         });
     }
 
-    private void setupViews() {
+    private void setupViews(View rootView) {
         recyclerView = rootView.findViewById(R.id.recycler_view);
         refreshLayout = rootView.findViewById(R.id.swipe_refresher);
         progressBar = rootView.findViewById(R.id.progress_bar_main);

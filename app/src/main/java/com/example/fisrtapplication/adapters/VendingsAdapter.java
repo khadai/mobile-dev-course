@@ -20,9 +20,10 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class VendingsAdapter extends RecyclerView.Adapter<VendingsAdapter.VendingViewHolder> {
-    private final List<Vending> vendings;
     private static final int TARGET_WIDTH = 88;
     private static final int TARGET_HEIGHT = 86;
+
+    private final List<Vending> vendings;
     private Context mContext;
 
     public VendingsAdapter(Context context, List<Vending> vendings) {
