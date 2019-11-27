@@ -1,5 +1,7 @@
 package com.example.fisrtapplication.adapters;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -7,21 +9,25 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.fisrtapplication.R;
+import com.example.fisrtapplication.activities.ItemDetailsActivity;
 import com.example.fisrtapplication.entities.Vending;
-
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class VendingsAdapter extends RecyclerView.Adapter<VendingsAdapter.VendingViewHolder> {
-    private List<Vending> vendings;
-    private final int TARGET_WIDTH = 88;
-    private final int TARGET_HEIGHT = 86;
+    private static final int TARGET_WIDTH = 88;
+    private static final int TARGET_HEIGHT = 86;
 
-    public VendingsAdapter(List<Vending> vendings) {
+    private final List<Vending> vendings;
+    private Context mContext;
+
+    public VendingsAdapter(Context context, List<Vending> vendings) {
+        this.mContext = context;
         this.vendings = vendings;
     }
 
@@ -47,6 +53,21 @@ public class VendingsAdapter extends RecyclerView.Adapter<VendingsAdapter.Vendin
                 .resize(TARGET_WIDTH, TARGET_HEIGHT)
                 .centerCrop()
                 .into(holder.vendingImageUrl);
+        holder.parentLayout.setOnClickListener(view -> {
+            openItemDetails(position);
+
+        });
+    }
+
+    private void openItemDetails(int position) {
+        Intent intent = new Intent(mContext, ItemDetailsActivity.class);
+        intent.putExtra("vending_name", vendings.get(position).getName());
+        intent.putExtra("vending_company", vendings.get(position).getCompany());
+        intent.putExtra("vending_goods", vendings.get(position).getGood());
+        intent.putExtra("vending_address", vendings.get(position).getAddress());
+        intent.putExtra("vending_img_url", vendings.get(position).getPicture());
+
+        mContext.startActivity(intent);
     }
 
     @Override
@@ -60,6 +81,7 @@ public class VendingsAdapter extends RecyclerView.Adapter<VendingsAdapter.Vendin
         private TextView vendingGood;
         private TextView vendingAddress;
         private ImageView vendingImageUrl;
+        private ConstraintLayout parentLayout;
 
         VendingViewHolder(final View itemView) {
             super(itemView);
@@ -68,6 +90,7 @@ public class VendingsAdapter extends RecyclerView.Adapter<VendingsAdapter.Vendin
             vendingGood = itemView.findViewById(R.id.item_vending_good);
             vendingAddress = itemView.findViewById(R.id.item_vending_address);
             vendingImageUrl = itemView.findViewById(R.id.item_vending_img);
+            parentLayout = itemView.findViewById(R.id.parent_layout);
         }
     }
 }
