@@ -1,7 +1,6 @@
 package com.example.fisrtapplication.fragments;
 
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -16,7 +15,6 @@ import com.example.fisrtapplication.adapters.VendingsAdapter;
 import com.example.fisrtapplication.api.VendingApiClient;
 import com.example.fisrtapplication.entities.Vending;
 import com.example.fisrtapplication.utils.ApplicationEx;
-import com.example.fisrtapplication.utils.ConnectionChangeReceiver;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.List;
@@ -38,6 +36,15 @@ public class DataListFragment extends Fragment {
     private FirebaseAuth mAuth;
     private ProgressBar progressBar;
     private View content;
+    private List<Vending> responseList;
+
+    public List<Vending> getResponseList() {
+        return responseList;
+    }
+
+    public VendingsAdapter getVendingsAdapter() {
+        return vendingsAdapter;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -45,17 +52,17 @@ public class DataListFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.activity_main, container, false);
 
         setupViews(rootView);
-        checkConnection();
+//        checkConnection();
         loadVendings();
         setSwipeToRefresh();
         return rootView;
     }
 
-    private void checkConnection() {
-        IntentFilter filter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
-        ConnectionChangeReceiver receiver = new ConnectionChangeReceiver(content);
-        Objects.requireNonNull(getActivity()).registerReceiver(receiver, filter);
-    }
+//    private void checkConnection() {
+//        IntentFilter filter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
+//        ConnectionChangeReceiver receiver = new ConnectionChangeReceiver(content);
+//        Objects.requireNonNull(getActivity()).registerReceiver(receiver, filter);
+//    }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -93,7 +100,8 @@ public class DataListFragment extends Fragment {
             @Override
             public void onResponse(final Call<List<Vending>> call,
                                    final Response<List<Vending>> response) {
-                vendingsAdapter = new VendingsAdapter(content.getContext(), response.body());
+                responseList = response.body();
+                vendingsAdapter = new VendingsAdapter(content.getContext(), responseList);
                 recyclerView.setAdapter(vendingsAdapter);
                 progressBar.setVisibility(View.INVISIBLE);
             }
