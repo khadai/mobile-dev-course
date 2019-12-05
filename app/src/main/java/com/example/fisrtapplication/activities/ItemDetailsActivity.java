@@ -5,6 +5,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.fisrtapplication.R;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.squareup.picasso.Picasso;
 
 import java.util.Objects;
@@ -19,6 +20,7 @@ public class ItemDetailsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_details);
+        FirebaseMessaging.getInstance().subscribeToTopic("NEWS");
 
         Objects.requireNonNull(getSupportActionBar()).setTitle(getString(R.string.ven_details));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

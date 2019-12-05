@@ -9,8 +9,8 @@ import android.net.Uri;
 import android.util.Log;
 
 import com.example.fisrtapplication.activities.ItemDetailsActivity;
+import com.example.fisrtapplication.api.VendingApiClient;
 import com.example.fisrtapplication.entities.Vending;
-import com.example.fisrtapplication.fragments.DataListFragment;
 import com.example.fisrtapplication.utils.ApplicationEx;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -21,8 +21,13 @@ import org.json.JSONObject;
 import java.util.List;
 
 import androidx.core.app.NotificationCompat;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
+
+    private List<Vending> listOfVendings;
 
     private static final String TAG = "FirebaseMessagingService";
 
@@ -31,6 +36,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
+//        loadVendings();
         // Check if message contains a data payload.
         if (remoteMessage.getData().size() > 0) {
             Log.d(TAG, "Message data payload: " + remoteMessage.getData());
@@ -54,7 +60,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             Log.d(TAG, "Message Notification Body: " + message);
             Log.d(TAG, "Message Notification click_action: " + click_action);
 
-            sendNotification(title, message, click_action);
+            loadVendings(title, message, click_action);
         }
     }
 
@@ -63,23 +69,60 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     }
 
-    private void sendNotification(String title, String messageBody, String click_action) {
+    public void loadVendings(String title, String message, String click_action) {
+//        progressBar.setVisibility(View.VISIBLE);
+        final VendingApiClient apiService = getApplicationEx().getVendingApiClient();
+        final Call<List<Vending>> call = apiService.getVendings();
+
+        call.enqueue(new Callback<List<Vending>>() {
+            @Override
+            public void onResponse(final Call<List<Vending>> call,
+                                   final Response<List<Vending>> response) {
+                listOfVendings = response.body();
+                Log.d(TAG, "Messageee body " + listOfVendings);
+                Log.d(TAG, "Messageee el " + listOfVendings.get(1).getName());
+
+                sendNotification(title, message, click_action, listOfVendings.get(Integer.parseInt(click_action)));
 
 
-        Intent intent = new Intent(this, ItemDetailsActivity.class);
+//                vendingsAdapter = new VendingsAdapter(content.getContext(), responseList);
+//                recyclerView.setAdapter(vendingsAdapter);
+//                progressBar.setVisibility(View.INVISIBLE);
+            }
+
+            @Override
+            public void onFailure(Call<List<Vending>> call, Throwable t) {
+//                progressBar.setVisibility(View.INVISIBLE);
+            }
+        });
+    }
+
+    private void sendNotification(String title, String messageBody, String click_action, Vending vending) {
+//        loadVendings(title, message, click_action);
+        Log.d(TAG, "Message body " + this.listOfVendings);
+//        Log.d(TAG, "Message size " + listOfVendings.size());
+
+//        listOfVendings = getApplicationEx().getListOfVendings();
+
+        Intent intent = new Intent(this, Main2Activity.class);
         int vendingIndex = Integer.parseInt(click_action);
-
-        DataListFragment fragment = new DataListFragment();
-        List<Vending> list = fragment.getResponseList();
-
-        intent.putExtra("vending_name", list.get(vendingIndex).getName());
-        intent.putExtra("vending_company", list.get(vendingIndex).getCompany());
-        intent.putExtra("vending_goods", list.get(vendingIndex).getGood());
-        intent.putExtra("vending_address", list.get(vendingIndex).getAddress());
-        intent.putExtra("vending_img_url", list.get(vendingIndex).getPicture());
+//        Vending vending = this.listOfVendings.get(vendingIndex);
+        Log.d(TAG, "Vending name " + vending.getName());
 
 
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//        DataListFragment fragment = new DataListFragment();
+//        fragment.loadVendings();
+//        List<Vending> list = fragment.getResponseList();
+
+//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+        intent.putExtra("vending_name", vending.getName());
+        intent.putExtra("vending_company", vending.getCompany());
+        intent.putExtra("vending_goods", vending.getGood());
+        intent.putExtra("vending_address", vending.getAddress());
+        intent.putExtra("vending_img_url", vending.getPicture());
+
+
 
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
                 PendingIntent.FLAG_ONE_SHOT);

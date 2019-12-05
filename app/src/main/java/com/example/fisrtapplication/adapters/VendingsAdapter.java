@@ -24,7 +24,7 @@ public class VendingsAdapter extends RecyclerView.Adapter<VendingsAdapter.Vendin
     private static final int TARGET_WIDTH = 88;
     private static final int TARGET_HEIGHT = 86;
 
-    private final List<Vending> vendings;
+    private List<Vending> vendings;
     private Context mContext;
 
     public VendingsAdapter(Context context, List<Vending> vendings) {

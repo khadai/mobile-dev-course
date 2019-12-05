@@ -91,8 +91,8 @@ public class DataListFragment extends Fragment {
         mAuth = getApplicationEx().getAuth();
     }
 
-    private void loadVendings() {
-        progressBar.setVisibility(View.VISIBLE);
+    public void loadVendings() {
+//        progressBar.setVisibility(View.VISIBLE);
         final VendingApiClient apiService = getApplicationEx().getVendingApiClient();
         final Call<List<Vending>> call = apiService.getVendings();
 
@@ -103,12 +103,12 @@ public class DataListFragment extends Fragment {
                 responseList = response.body();
                 vendingsAdapter = new VendingsAdapter(content.getContext(), responseList);
                 recyclerView.setAdapter(vendingsAdapter);
-                progressBar.setVisibility(View.INVISIBLE);
+//                progressBar.setVisibility(View.INVISIBLE);
             }
 
             @Override
             public void onFailure(Call<List<Vending>> call, Throwable t) {
-                progressBar.setVisibility(View.INVISIBLE);
+//                progressBar.setVisibility(View.INVISIBLE);
             }
         });
     }
