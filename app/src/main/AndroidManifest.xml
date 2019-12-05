@@ -19,9 +19,9 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.ItemDetailsActivity"
-            android:parentActivityName=".activities.MainActivity" >
+            android:name=".activities.ItemDetailsActivity">
             <intent-filter>
+                <action android:name="6" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>

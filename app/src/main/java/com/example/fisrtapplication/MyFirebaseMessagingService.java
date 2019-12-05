@@ -30,6 +30,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private List<Vending> listOfVendings;
 
     private static final String TAG = "FirebaseMessagingService";
+    private String title;
+    private String message;
+    private String click_action;
 
     public MyFirebaseMessagingService() {
     }
@@ -52,15 +55,15 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         // Check if message contains a notification payload.
         if (remoteMessage.getNotification() != null) {
-            String title = remoteMessage.getNotification().getTitle(); //get title
-            String message = remoteMessage.getNotification().getBody(); //get message
-            String click_action = remoteMessage.getNotification().getClickAction(); //get click_action
+            title = remoteMessage.getNotification().getTitle(); //get title
+            message = remoteMessage.getNotification().getBody(); //get message
+            click_action = remoteMessage.getNotification().getClickAction(); //get click_action
 
             Log.d(TAG, "Message Notification Title: " + title);
             Log.d(TAG, "Message Notification Body: " + message);
             Log.d(TAG, "Message Notification click_action: " + click_action);
 
-            loadVendings(title, message, click_action);
+            loadVendings();
         }
     }
 
@@ -69,10 +72,12 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     }
 
-    public void loadVendings(String title, String message, String click_action) {
+    public void loadVendings() {
 //        progressBar.setVisibility(View.VISIBLE);
         final VendingApiClient apiService = getApplicationEx().getVendingApiClient();
         final Call<List<Vending>> call = apiService.getVendings();
+        Log.d(TAG, "API body " + call);
+
 
         call.enqueue(new Callback<List<Vending>>() {
             @Override
@@ -82,7 +87,11 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 Log.d(TAG, "Messageee body " + listOfVendings);
                 Log.d(TAG, "Messageee el " + listOfVendings.get(1).getName());
 
-                sendNotification(title, message, click_action, listOfVendings.get(Integer.parseInt(click_action)));
+                int vendingIndex = Integer.parseInt(click_action);
+                Vending vending = listOfVendings.get(vendingIndex);
+
+
+                sendNotification(title, message, click_action, vending);
 
 
 //                vendingsAdapter = new VendingsAdapter(content.getContext(), responseList);
@@ -104,8 +113,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
 //        listOfVendings = getApplicationEx().getListOfVendings();
 
-        Intent intent = new Intent(this, Main2Activity.class);
-        int vendingIndex = Integer.parseInt(click_action);
+        Intent intent = new Intent(this, ItemDetailsActivity.class);
+//        int vendingIndex = Integer.parseInt(click_action);
 //        Vending vending = this.listOfVendings.get(vendingIndex);
         Log.d(TAG, "Vending name " + vending.getName());
 
@@ -114,14 +123,14 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 //        fragment.loadVendings();
 //        List<Vending> list = fragment.getResponseList();
 
-//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
 
         intent.putExtra("vending_name", vending.getName());
         intent.putExtra("vending_company", vending.getCompany());
         intent.putExtra("vending_goods", vending.getGood());
         intent.putExtra("vending_address", vending.getAddress());
         intent.putExtra("vending_img_url", vending.getPicture());
-
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
 
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
