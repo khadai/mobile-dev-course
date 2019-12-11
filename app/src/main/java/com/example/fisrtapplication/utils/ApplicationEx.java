@@ -21,7 +21,7 @@ public class ApplicationEx extends Application {
     public void onCreate() {
         super.onCreate();
 
-//        loadVendings();
+//        makeNotification();
         mAuth = FirebaseAuth.getInstance();
         vendingApiClient = createVendingApiClient();
     }
@@ -48,7 +48,7 @@ public class ApplicationEx extends Application {
     }
 
 //
-//    public void loadVendings() {
+//    public void makeNotification() {
 ////        progressBar.setVisibility(View.VISIBLE);
 ////        final VendingApiClient apiService = getApplicationEx().getVendingApiClient();
 //        final Call<List<Vending>> call = vendingApiClient.getVendings();
