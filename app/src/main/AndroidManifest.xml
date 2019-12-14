@@ -14,6 +14,10 @@
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
         <activity android:name=".activities.ItemDetailsActivity"
             android:parentActivityName=".activities.MainActivity">
+            <intent-filter>
+                <action android:name="6" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".activities.MainActivity"
