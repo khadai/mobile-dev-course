@@ -2,6 +2,7 @@ package com.example.fisrtapplication.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +24,7 @@ public class VendingsAdapter extends RecyclerView.Adapter<VendingsAdapter.Vendin
     private static final int TARGET_WIDTH = 88;
     private static final int TARGET_HEIGHT = 86;
 
-    private final List<Vending> vendings;
+    private List<Vending> vendings;
     private Context mContext;
 
     public VendingsAdapter(Context context, List<Vending> vendings) {
@@ -55,11 +56,12 @@ public class VendingsAdapter extends RecyclerView.Adapter<VendingsAdapter.Vendin
                 .into(holder.vendingImageUrl);
         holder.parentLayout.setOnClickListener(view -> {
             openItemDetails(position);
-
         });
     }
 
-    private void openItemDetails(int position) {
+    public void openItemDetails(int position) {
+        Log.d("FROM", vendings.toString());
+
         Intent intent = new Intent(mContext, ItemDetailsActivity.class);
         intent.putExtra("vending_name", vendings.get(position).getName());
         intent.putExtra("vending_company", vendings.get(position).getCompany());
@@ -73,6 +75,10 @@ public class VendingsAdapter extends RecyclerView.Adapter<VendingsAdapter.Vendin
     @Override
     public int getItemCount() {
         return vendings.size();
+    }
+
+    public List<Vending> getVendings() {
+        return vendings;
     }
 
     class VendingViewHolder extends RecyclerView.ViewHolder {
